@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin>  
+	<extension
+         id="SmapieBuilder"
+         name="Smapifier"
+         point="org.eclipse.core.resources.builders">
+      <builder>
+         <run class="com.ibm.watson.smapifier.builder.SmapieBuilder"/>
+      </builder>
+   </extension>
+   
+   <extension
+         id="smapinature"
+         name="Smapi Nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run class="com.ibm.watson.smapifier.builder.SmapiProjectNature"/>
+      </runtime>
+      <builder id="com.ibm.watson.smapifier.builder.SmapieBuilder"/>
+      <requires-nature id="org.eclipse.jdt.core.javanature"/>
+   </extension>
+   
+   <extension
+         id="com.ibm.watson.smapifier.extension"
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.jdt.core.IJavaProject"
+            nameFilter="*"
+            id="com.ibm.smapie.menu">
+         <action
+               label="Enable smapify"
+               class="com.ibm.watson.smapifier.actions.SmapifyAction"
+               enablesFor="1"
+               menubarPath="additions"
+               id="com.ibm.watson.smapifier.actions">
+         </action>
+      </objectContribution>
+   </extension>
+   
+   
+</plugin>

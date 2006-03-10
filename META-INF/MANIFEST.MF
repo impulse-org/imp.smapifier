@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Smapie Plug-in
+Bundle-SymbolicName: com.ibm.watson.smapifier; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: com.ibm.watson.smapifier.SmapiePlugin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ com.ibm.watson.safari.x10,
+ org.eclipse.uide.runtime,
+ org.eclipse.jdt.core,
+ com.ibm.watson.smapi
+Eclipse-AutoStart: true
+Export-Package: com.ibm.watson.smapifier.actions
