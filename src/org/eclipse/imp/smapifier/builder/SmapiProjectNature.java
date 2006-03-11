@@ -17,7 +17,7 @@ public class SmapiProjectNature extends ProjectNatureBase {
 	}
 
 	public IPluginLog getLog() {
-		return SmapiePlugin.getInstance();
+		return SmapiePlugin.getDefault();
 	}
 
 	protected void refreshPrefs() {
