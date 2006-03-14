@@ -1,5 +1,8 @@
 package com.ibm.watson.smapifier.builder;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -29,11 +32,13 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 	private final DeltaVisitor fDeltaVisitor= new DeltaVisitor();
 	private final ResourceVisitor fResourceVisitor= new ResourceVisitor();
 
+	private IProgressMonitor fMonitor;
+
 	
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
 		fProject = getProject();
-		
+		fMonitor = monitor;
 		fPathPrefix = fProject.getWorkspace().getRoot().getRawLocation() + fProject.getFullPath().toString();
 		
 		
@@ -41,17 +46,18 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 		IResourceDelta delta= getDelta(fProject);
 
 		if (delta != null) {
-		    //X10Plugin.getInstance().maybeWriteInfoMsg("==> Scanning resource delta for project '" + fProject.getName() + "'... <==");
+		    X10Plugin.getInstance().maybeWriteInfoMsg("==> Smapi Scanning resource delta for project '" + fProject.getName() + "'... <==");
 		    delta.accept(fDeltaVisitor);
-		    //X10Plugin.getInstance().maybeWriteInfoMsg("X10 delta scan completed for project '" + fProject.getName() + "'...");
+		    X10Plugin.getInstance().maybeWriteInfoMsg("Smapi delta scan completed for project '" + fProject.getName() + "'...");
 		} else {
-		    //X10Plugin.getInstance().maybeWriteInfoMsg("==> Scanning for X10 source files in project '" + fProject.getName() + "'... <==");
+		    X10Plugin.getInstance().maybeWriteInfoMsg("==> Smapi Scanning for X10 source files in project '" + fProject.getName() + "'... <==");
 		    fProject.accept(fResourceVisitor);
-		    //X10Plugin.getInstance().maybeWriteInfoMsg("X10 source file scan completed for project '" + fProject.getName() + "'...");
+		    X10Plugin.getInstance().maybeWriteInfoMsg("Smapi X10 source file scan completed for project '" + fProject.getName() + "'...");
 		}
 		
 		IProject[] ret = new IProject[1];
 		ret[0] = fProject;
+		refresh();
 		return ret;
 	}
 	
@@ -127,7 +133,15 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 	}
 	
 	private boolean isBinaryFolder(IResource resource) {
-		return resource.getFullPath().lastSegment().equals("bin");
+		try {
+			IPath bin = JavaCore.create(fProject).getOutputLocation();
+			return resource.getFullPath().equals(bin);
+		
+		} catch (JavaModelException e) {
+			System.err.println(e);
+		}
+		return false;
+		
 	}
 
 	protected boolean existsJava(IFile file) {
@@ -136,5 +150,38 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 		String jname = fullPath.toString() + ".java";
 		IFile jfile = fProject.getFile(jname);
 		return (jfile.exists());
+	}
+	
+	private void refresh() throws CoreException{
+		List/*<IPath>*/ projectSrcPath= getProjectSrcPath();
+
+	    for(Iterator iter= projectSrcPath.iterator(); iter.hasNext(); ) {
+	    	IPath pathEntry= (IPath) iter.next();
+		
+	    	if (pathEntry.segmentCount() == 1)
+		    // Work around Eclipse 3.1.0 bug 101733: gives spurious exception
+		    // if folder refers to project itself (happens when a Java project
+		    // is configured not to use separate src/bin folders).
+		    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=101733
+	    		fProject.refreshLocal(IResource.DEPTH_INFINITE, fMonitor);
+	    	else
+	    		fProject.getWorkspace().getRoot().getFolder(pathEntry).refreshLocal(IResource.DEPTH_INFINITE, fMonitor);
+	    }
+	}
+	
+	private List/*<IPath>*/ getProjectSrcPath() throws JavaModelException {
+		List/* <IPath> */srcPath= new ArrayList();
+		IJavaProject javaProject= JavaCore.create(fProject);
+		IClasspathEntry[] classPath= javaProject.getResolvedClasspath(true);
+
+		for(int i= 0; i < classPath.length; i++) {
+		    IClasspathEntry e= classPath[i];
+
+		    if (e.getEntryKind() == IClasspathEntry.CPE_SOURCE)
+			srcPath.add(e.getPath());
+		}
+		if (srcPath.size() == 0)
+		    srcPath.add(fProject.getLocation());
+		return srcPath;
 	}
 }
