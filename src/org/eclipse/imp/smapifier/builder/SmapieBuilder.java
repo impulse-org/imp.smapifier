@@ -12,6 +12,10 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 
 import com.ibm.watson.safari.x10.X10Plugin;
 import com.ibm.watson.smapi.Main;
@@ -31,9 +35,9 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 		fProject = getProject();
 		
 		fPathPrefix = fProject.getWorkspace().getRoot().getRawLocation() + fProject.getFullPath().toString();
-		System.out.println("pathprefix = " + fPathPrefix);
 		
-		System.out.println("inside builder");
+		
+		System.out.println("inside Smap builder");
 		IResourceDelta delta= getDelta(fProject);
 
 		if (delta != null) {
@@ -67,14 +71,48 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 	protected boolean processResource(IResource resource) {
 		if (resource instanceof IFile) {
 			IFile file= (IFile) resource;
-		    if (isSourceFile(file) && existsJC(file)){
+			IFile classFile = getClassFile(file);
+			
+			if (classFile !=null)
+				System.out.println("classFile.exists = " + classFile.exists() + " and existsJava = " + existsJava(file));
+			
+		    if (isSourceFile(file) && (classFile != null) && classFile.exists() && existsJava(file)){
 		    	System.out.println("smapifying " + file.getRawLocation());
-		    	Main.smapify(makeJavaFile(file.getRawLocation().toString()), fPathPrefix);
+		    	Main.smapify(makeJavaFile(file.getRawLocation().toString()), fPathPrefix, classFile.getRawLocation().toString());
 		    	
 		    }
 		} else if (isBinaryFolder(resource))
 		    return false;
 		return true;
+	}
+	
+	private IFile getClassFile(IFile file){
+		IJavaProject javaProject = JavaCore.create(fProject);
+		try {
+			IClasspathEntry[] entries = javaProject.getResolvedClasspath(true);
+			for (int i = 0; i < entries.length ; i++){
+			
+				if (entries[i].getEntryKind() == IClasspathEntry.CPE_SOURCE){
+					if (entries[i].getPath().append(file.getName()).equals(file.getFullPath())){
+						IPath out = entries[i].getOutputLocation();
+						String outLocation = null;
+						if (out == null)
+							outLocation = javaProject.getOutputLocation().removeFirstSegments(1).toString();
+						else
+							outLocation = out.toString();
+						
+						int count = file.getFullPath().matchingFirstSegments(entries[i].getPath());
+						String rest = file.getFullPath().removeFirstSegments(count).removeFileExtension().toString();
+						outLocation += "/" + rest + ".class";
+						System.out.println("outLocation " + outLocation);
+						return fProject.getFile(outLocation);
+					}
+				}
+			}
+		} catch (JavaModelException e) {
+			System.err.println(e);
+		}
+		return null;
 	}
 	
 	private String makeJavaFile(String filename){
@@ -92,13 +130,11 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 		return resource.getFullPath().lastSegment().equals("bin");
 	}
 
-	protected boolean existsJC(IFile file) {
+	protected boolean existsJava(IFile file) {
 		IPath fullPath = file.getProjectRelativePath(); 
 		fullPath = fullPath.removeFileExtension();
 		String jname = fullPath.toString() + ".java";
-		String cname = fullPath.toString() + ".class";
 		IFile jfile = fProject.getFile(jname);
-		IFile cfile = fProject.getFile(cname);
-		return (jfile.exists() && cfile.exists());
+		return (jfile.exists());
 	}
 }

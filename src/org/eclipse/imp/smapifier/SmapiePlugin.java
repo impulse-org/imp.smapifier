@@ -1,6 +1,7 @@
 package com.ibm.watson.smapifier;
 
 import org.eclipse.ui.plugin.*;
+import org.eclipse.uide.runtime.IPluginLog;
 import org.eclipse.uide.runtime.UIDEPluginBase;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.osgi.framework.BundleContext;
@@ -21,6 +22,7 @@ public class SmapiePlugin extends UIDEPluginBase  {
 		plugin = this;
 	}
 
+	
 	/**
 	 * This method is called upon plug-in activation
 	 */
@@ -58,6 +60,9 @@ public class SmapiePlugin extends UIDEPluginBase  {
 	public String getID() {
 		return kPluginID;
 	}
+
+
+	
 
 	
 }

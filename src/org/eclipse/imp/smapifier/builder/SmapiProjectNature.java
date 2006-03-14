@@ -25,6 +25,9 @@ public class SmapiProjectNature extends ProjectNatureBase {
 
 	}
 
+	protected String[] getDownStreamBuildersID(){
+		return new String[0];
+	}
 	protected String getDownstreamBuilderID() {
 		return "org.eclipse.jdt.core.javabuilder";
 	}
