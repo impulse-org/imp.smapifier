@@ -2,14 +2,14 @@ package com.ibm.watson.smapifier;
 
 import org.eclipse.ui.plugin.*;
 import org.eclipse.uide.runtime.IPluginLog;
-import org.eclipse.uide.runtime.UIDEPluginBase;
+import org.eclipse.uide.runtime.SAFARIPluginBase;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.osgi.framework.BundleContext;
 
 /**
  * The main plugin class to be used in the desktop.
  */
-public class SmapiePlugin extends UIDEPluginBase  {
+public class SmapiePlugin extends SAFARIPluginBase  {
 	public static final String kPluginID= "com.ibm.watson.smapifier";
 
 	//The shared instance.
