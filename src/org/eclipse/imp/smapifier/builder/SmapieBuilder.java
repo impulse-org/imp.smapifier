@@ -99,7 +99,7 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 			for (int i = 0; i < entries.length ; i++){
 			
 				if (entries[i].getEntryKind() == IClasspathEntry.CPE_SOURCE){
-					if (entries[i].getPath().append(file.getName()).equals(file.getFullPath())){
+					if (file.getFullPath().matchingFirstSegments(entries[i].getPath()) == entries[i].getPath().segmentCount()){
 						IPath out = entries[i].getOutputLocation();
 						String outLocation = null;
 						if (out == null)
