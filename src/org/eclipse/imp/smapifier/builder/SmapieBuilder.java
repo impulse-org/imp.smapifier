@@ -40,23 +40,23 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 		fProject = getProject();
 		fMonitor = monitor;
 		fPathPrefix = fProject.getWorkspace().getRoot().getRawLocation() + fProject.getFullPath().toString();
-		
-		
-		System.out.println("inside Smap builder");
+
+		System.out.println("Inside SMAP builder");
 		IResourceDelta delta= getDelta(fProject);
 
 		if (delta != null) {
-		    X10Plugin.getInstance().maybeWriteInfoMsg("==> Smapi Scanning resource delta for project '" + fProject.getName() + "'... <==");
+		    SmapiePlugin.getDefault().maybeWriteInfoMsg("==> Smapi Scanning resource delta for project '" + fProject.getName() + "'... <==");
 		    delta.accept(fDeltaVisitor);
-		    X10Plugin.getInstance().maybeWriteInfoMsg("Smapi delta scan completed for project '" + fProject.getName() + "'...");
+		    SmapiePlugin.getDefault().maybeWriteInfoMsg("Smapi delta scan completed for project '" + fProject.getName() + "'...");
 		} else {
-		    X10Plugin.getInstance().maybeWriteInfoMsg("==> Smapi Scanning for X10 source files in project '" + fProject.getName() + "'... <==");
+		    SmapiePlugin.getDefault().maybeWriteInfoMsg("==> Smapi Scanning for X10 source files in project '" + fProject.getName() + "'... <==");
 		    fProject.accept(fResourceVisitor);
-		    X10Plugin.getInstance().maybeWriteInfoMsg("Smapi X10 source file scan completed for project '" + fProject.getName() + "'...");
+		    SmapiePlugin.getDefault().maybeWriteInfoMsg("Smapi X10 source file scan completed for project '" + fProject.getName() + "'...");
 		}
 		
-		IProject[] ret = new IProject[1];
-		ret[0] = fProject;
+		IProject[] ret = new IProject[] { fProject };
+
+		System.out.println("Leaving SMAP builder");
 		refresh();
 		return ret;
 	}
@@ -134,14 +134,39 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 	
 	private boolean isBinaryFolder(IResource resource) {
 		try {
-			IPath bin = JavaCore.create(fProject).getOutputLocation();
-			return resource.getFullPath().equals(bin);
-		
+		    // RMF The following commented-out version is incorrect for projects
+		    // that have their source=output=project root folder.
+//			IPath bin = JavaCore.create(fProject).getOutputLocation();
+//			return resource.getFullPath().equals(bin);
+
+		    //
+		    // RMF The right check is: resource path is one of the project's output folders.
+		    // Not sure the following is quite right...
+		    //
+		    // Caching would be a really good idea here: save the set of project
+		    // output folders in a Set. Seems Path implements equals() properly.
+		    IPath projPath= fProject.getFullPath();
+		    final IJavaProject javaProj= JavaCore.create(fProject);
+		    boolean projectIsSrcBin= javaProj.getOutputLocation().matchingFirstSegments(projPath) == projPath.segmentCount();
+
+		    if (projectIsSrcBin) return false;
+
+		    final IPath resourcePath= resource.getFullPath();
+
+		    if (resourcePath.equals(javaProj.getOutputLocation())) return true;
+
+		    IClasspathEntry[] cp= javaProj.getResolvedClasspath(true);
+
+		    for(int i= 0; i < cp.length; i++) {
+			if (cp[i].getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+			    if (resourcePath.equals(cp[i].getOutputLocation()))
+				return true;
+			}
+		    }
 		} catch (JavaModelException e) {
 			System.err.println(e);
 		}
 		return false;
-		
 	}
 
 	protected boolean existsJava(IFile file) {
