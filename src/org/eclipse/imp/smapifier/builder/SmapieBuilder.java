@@ -20,7 +20,6 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
-import com.ibm.watson.safari.x10.X10Plugin;
 import com.ibm.watson.smapi.Main;
 import com.ibm.watson.smapifier.SmapiePlugin;
 
@@ -34,12 +33,31 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 
 	private IProgressMonitor fMonitor;
 
+        private String fFileExten= "x10";
 	
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
 		fProject = getProject();
 		fMonitor = monitor;
 		fPathPrefix = fProject.getWorkspace().getRoot().getRawLocation() + fProject.getFullPath().toString();
+
+                // RMF 3/25/2006: Pick up the file name extension from the "args" parameter.
+                // This comes from the .project file, and looks like this:
+                //
+                //   <buildCommand>
+                //     <name>com.ibm.watson.smapifier.SmapieBuilder</name>
+                //     <arguments>
+                //       <dictionary>
+                //         <key>exten</key>
+                //         <value>leg</value>
+                //       </dictionary>
+                //     </arguments>
+                //   </buildCommand>
+                //
+                // Presumably it got there by whatever configured the SMAPI builder on the project.
+
+                if (args.get("exten") != null)
+                    fFileExten= (String) args.get("exten");
 
 		System.out.println("Inside SMAP builder");
 		IResourceDelta delta= getDelta(fProject);
@@ -49,9 +67,9 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 		    delta.accept(fDeltaVisitor);
 		    SmapiePlugin.getDefault().maybeWriteInfoMsg("Smapi delta scan completed for project '" + fProject.getName() + "'...");
 		} else {
-		    SmapiePlugin.getDefault().maybeWriteInfoMsg("==> Smapi Scanning for X10 source files in project '" + fProject.getName() + "'... <==");
+		    SmapiePlugin.getDefault().maybeWriteInfoMsg("==> Smapi Scanning for '." + fFileExten + "' source files in project '" + fProject.getName() + "'... <==");
 		    fProject.accept(fResourceVisitor);
-		    SmapiePlugin.getDefault().maybeWriteInfoMsg("Smapi X10 source file scan completed for project '" + fProject.getName() + "'...");
+		    SmapiePlugin.getDefault().maybeWriteInfoMsg("Smapi source file scan completed for project '" + fProject.getName() + "'...");
 		}
 		
 		IProject[] ret = new IProject[] { fProject };
@@ -129,7 +147,7 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 	protected boolean isSourceFile(IFile file) {
 		String exten= file.getFileExtension();
 
-		return file.exists() && exten != null && exten.compareTo("x10") == 0;
+		return file.exists() && exten != null && exten.compareTo(fFileExten) == 0;
 	}
 	
 	private boolean isBinaryFolder(IResource resource) {
