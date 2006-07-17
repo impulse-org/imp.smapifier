@@ -176,12 +176,12 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 		return false;
 	}
 	
-	protected boolean existsSourceFile(IFile file) {
+	/*protected boolean existsSourceFile(IFile file) {
 
 		String exten= file.getFileExtension();
 
 		return file.exists() && exten != null && exten.compareTo(fFileExten) == 0;
-	}
+	}*/
 	
 	private boolean isBinaryFolder(IResource resource) {
 		try {
@@ -220,7 +220,7 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 		return false;
 	}
 
-	protected boolean existsJava(IFile file) {
+	/*protected boolean existsJava(IFile file) {
 		IPath fullPath = file.getProjectRelativePath(); 
 		fullPath = fullPath.removeFileExtension();
 		String jname = fullPath.toString();
@@ -231,7 +231,7 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 			jname = jname + ".java";
 		IFile jfile = fProject.getFile(jname);
 		return (jfile.exists());
-	}
+	}*/
 	
 	private void refresh() throws CoreException{
 		List/*<IPath>*/ projectSrcPath= getProjectSrcPath();
