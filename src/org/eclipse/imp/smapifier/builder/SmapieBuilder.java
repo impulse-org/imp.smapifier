@@ -36,7 +36,12 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 
 	private IProgressMonitor fMonitor;
 
-        private String fFileExten= "x10";
+    private static String fFileExten= "x10";
+        
+    
+    public static String getOrigExten(){
+    	return fFileExten;
+    }
 	
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
