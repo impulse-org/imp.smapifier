@@ -13,5 +13,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.core,
  com.ibm.watson.smapi
 Eclipse-AutoStart: true
-Export-Package: com.ibm.watson.smapifier.actions
+Export-Package: com.ibm.watson.smapifier.actions,
+ com.ibm.watson.smapifier.builder
 Bundle-Vendor: mvaziri@us.ibm.com
