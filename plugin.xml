@@ -3,7 +3,7 @@
 <plugin>  
 	<extension
          id="SmapieBuilder"
-         name="Smapifier"
+         name="SMAP Builder"
          point="org.eclipse.core.resources.builders">
       <builder>
          <run class="com.ibm.watson.smapifier.builder.SmapieBuilder"/>
@@ -12,7 +12,7 @@
    
    <extension
          id="smapinature"
-         name="Smapi Nature"
+         name="SMAP Nature"
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run class="com.ibm.watson.smapifier.builder.SmapiProjectNature"/>
