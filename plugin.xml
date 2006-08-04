@@ -29,7 +29,7 @@
             nameFilter="*"
             id="com.ibm.smapie.menu">
          <action
-               label="Enable SMAP Builder"
+               label="Enable SMAP Builder for X10"
                class="com.ibm.watson.smapifier.actions.SmapifyAction"
                enablesFor="1"
                menubarPath="additions"
