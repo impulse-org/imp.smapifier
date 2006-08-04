@@ -36,12 +36,14 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 
 	private IProgressMonitor fMonitor;
 
-    private static String fFileExten= "x10";
+	// RMF 8/4/2006 - This can't be static; different projects in the same workspace
+	// could be configured to run the SMAP builder for different file-name extensions.
+	private String fFileExten= "x10";
         
     
-    public static String getOrigExten(){
-    	return fFileExten;
-    }
+	public String getOrigExten(){
+	    return fFileExten;
+	}
 	
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
@@ -67,7 +69,8 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
                 if (args.get("exten") != null)
                     fFileExten= (String) args.get("exten");
 
-		System.out.println("Inside SMAP builder");
+                if (Main.debug)
+                    System.out.println("Inside SMAP builder");
 		IResourceDelta delta= getDelta(fProject);
 
 		if (delta != null) {
@@ -82,7 +85,8 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 		
 		IProject[] ret = new IProject[] { fProject };
 
-		System.out.println("Leaving SMAP builder");
+		if (Main.debug)
+		    System.out.println("Leaving SMAP builder");
 		refresh();
 		return ret;
 	}
@@ -148,9 +152,16 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 					    IPath parentSrcPath = parentPath.removeFirstSegments(entries[i].getPath().segmentCount());
 					    
 					    IPath parentFullPath = out.append(parentSrcPath);
-					    IResource[] members = ((IContainer) fProject.findMember(parentFullPath)).members();
-					    
-					 
+					    final IResource parent= fProject.findMember(parentFullPath);
+
+					    // RMF 8/4/2006 - If the SMAP builder ran before the Java builder,
+					    // the output folder might have been cleaned out, and sub-folders
+					    // (corresponding to packages) won't exist, so parent could be null.
+					    if (parent == null)
+						continue;
+
+					    IResource[] members = ((IContainer) parent).members();
+
 					    for(int j = 0; j < members.length; j++){
 					    	String name = members[j].getName(); 
 					    	if (classBelongsTo(file, name))
