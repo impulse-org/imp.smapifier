@@ -2,17 +2,25 @@ package com.ibm.watson.smapifier.builder;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.uide.core.ProjectNatureBase;
 import org.eclipse.uide.runtime.IPluginLog;
 import com.ibm.watson.smapifier.SmapiePlugin;
 
 public class SmapiProjectNature extends ProjectNatureBase {
 	public static final String k_natureID= SmapiePlugin.kPluginID + ".smapinature";
-	private final String fExtension;
+
+	private String fExtension;
+
+	public SmapiProjectNature() {
+	    this(null);
+	}
 
 	public SmapiProjectNature(String exten) {
 	    fExtension= exten;
+	}
+
+	public void setExtension(String extension) {
+	    fExtension= extension;
 	}
 
 	public String getNatureID() {
