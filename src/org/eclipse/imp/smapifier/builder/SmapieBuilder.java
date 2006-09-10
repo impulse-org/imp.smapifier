@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.uide.editor.ToggleBreakpointsAdapter;
 
 import com.ibm.watson.smapi.Main;
 import com.ibm.watson.smapifier.SmapiePlugin;
@@ -47,9 +48,11 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 	
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
+		
 		fProject = getProject();
 		fMonitor = monitor;
 		fPathPrefix = fProject.getWorkspace().getRoot().getRawLocation() + fProject.getFullPath().toString();
+		
 		
                 // RMF 3/25/2006: Pick up the file name extension from the "args" parameter.
                 // This comes from the .project file, and looks like this:
@@ -73,6 +76,7 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
                     System.out.println("Inside SMAP builder");
 		IResourceDelta delta= getDelta(fProject);
 
+		
 		if (delta != null) {
 		    SmapiePlugin.getDefault().maybeWriteInfoMsg("==> Smapi Scanning resource delta for project '" + fProject.getName() + "'... <==");
 		    delta.accept(fDeltaVisitor);
@@ -115,6 +119,7 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 			String filename = file.getRawLocation().toString();
 			Set /*IResource*/ classFiles = getClassFiles(file);
 			
+			ToggleBreakpointsAdapter.resetJavaBreakpoints(file);
 				
 			for(Iterator t = classFiles.iterator(); t.hasNext(); ){
 				IFile classFile = (IFile) t.next();
