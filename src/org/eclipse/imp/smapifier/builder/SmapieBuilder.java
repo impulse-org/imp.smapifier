@@ -40,20 +40,18 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 	// RMF 8/4/2006 - This can't be static; different projects in the same workspace
 	// could be configured to run the SMAP builder for different file-name extensions.
 	private String fFileExten= "x10";
-        
-    
+
 	public String getOrigExten(){
 	    return fFileExten;
 	}
-	
+
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
-		
+
 		fProject = getProject();
 		fMonitor = monitor;
 		fPathPrefix = fProject.getWorkspace().getRoot().getRawLocation() + fProject.getFullPath().toString();
-		
-		
+
                 // RMF 3/25/2006: Pick up the file name extension from the "args" parameter.
                 // This comes from the .project file, and looks like this:
                 //
