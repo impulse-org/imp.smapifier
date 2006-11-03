@@ -1,7 +1,11 @@
 package com.ibm.watson.smapifier.builder;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.eclipse.uide.core.ProjectNatureBase;
 import org.eclipse.uide.runtime.IPluginLog;
 import com.ibm.watson.smapifier.SmapiePlugin;
@@ -9,18 +13,20 @@ import com.ibm.watson.smapifier.SmapiePlugin;
 public class SmapiProjectNature extends ProjectNatureBase {
 	public static final String k_natureID= SmapiePlugin.kPluginID + ".smapinature";
 
-	private String fExtension;
+	private Set/*<String>*/ fExtensions= new HashSet();
 
-	public SmapiProjectNature() {
-	    this(null);
-	}
+	public SmapiProjectNature() { }
 
 	public SmapiProjectNature(String exten) {
-	    fExtension= exten;
+	    fExtensions.add(exten);
 	}
 
-	public void setExtension(String extension) {
-	    fExtension= extension;
+	public SmapiProjectNature(List/*<String>*/ extens) {
+	    fExtensions.addAll(extens);
+	}
+
+	public void addExtension(String extension) {
+	    fExtensions.add(extension);
 	}
 
 	public String getNatureID() {
@@ -45,7 +51,9 @@ public class SmapiProjectNature extends ProjectNatureBase {
 	protected Map getBuilderArguments() {
 	    Map m= new HashMap();
 
-	    m.put("exten", fExtension);
+	    if (fExtensions.size() > 0)
+		m.put("exten", fExtensions.iterator().next());
+
 	    return m;
 	}
 }
