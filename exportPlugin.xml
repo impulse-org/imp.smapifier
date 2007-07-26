@@ -5,7 +5,7 @@
 
 	<target name="init" depends="properties">
 		<property name="plugin.name" value="com.ibm.watson.smapifier"/>
-		<property name="plugin.version" value="${runtime.version}"/>
+		<property name="plugin.version" value="${plugins.version.31}"/>
 		<property name="plugin.jar.name" value="${plugin.name}_${plugin.version}.jar"/>
 		<property name="plugin.zip.name" value="${plugin.name}_${plugin.version}.zip"/>
 		<property name="plugin.src.zip" value="${plugin.name}src.zip"/>
@@ -35,8 +35,8 @@
 		<javac destdir="${temp.folder}/${plugin.jar.name}.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bootclasspath}" source="${javacSource}" target="${javacTarget}"		>
 			<compilerarg line="${compilerArg}"/>
 			<classpath>
-				<pathelement path="../com.ibm.watson.smapi/com.ibm.watson.smapi_${plugin.version}.jar"/>
-				<pathelement path="../org.eclipse.uide.runtime/org.eclipse.uide.runtime_${plugin.version}.jar"/>
+				<pathelement path="../com.ibm.watson.smapi/bin"/>
+				<pathelement path="../org.eclipse.uide.runtime/bin"/>
 				<pathelement path="${eclipse.build.path}"/>
 			</classpath>
 			<src path="src/"/>
