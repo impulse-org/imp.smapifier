@@ -1,9 +1,8 @@
 package com.ibm.watson.smapifier;
 
-import org.eclipse.ui.plugin.*;
-import org.eclipse.uide.runtime.IPluginLog;
-import org.eclipse.uide.runtime.SAFARIPluginBase;
+import org.eclipse.imp.runtime.SAFARIPluginBase;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**

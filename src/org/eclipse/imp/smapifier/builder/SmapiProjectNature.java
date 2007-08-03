@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.uide.core.ProjectNatureBase;
-import org.eclipse.uide.runtime.IPluginLog;
+import org.eclipse.imp.core.ProjectNatureBase;
+import org.eclipse.imp.runtime.IPluginLog;
+
 import com.ibm.watson.smapifier.SmapiePlugin;
 
 public class SmapiProjectNature extends ProjectNatureBase {

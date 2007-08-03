@@ -18,11 +18,11 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.imp.editor.ToggleBreakpointsAdapter;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.uide.editor.ToggleBreakpointsAdapter;
 
 import com.ibm.watson.smapi.Main;
 import com.ibm.watson.smapifier.SmapiePlugin;
