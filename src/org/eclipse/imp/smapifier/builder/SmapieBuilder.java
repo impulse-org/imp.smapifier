@@ -18,7 +18,7 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.imp.editor.ToggleBreakpointsAdapter;
+import org.eclipse.imp.utils.BreakpointUtils;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
@@ -117,7 +117,7 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 			String filename = file.getRawLocation().toString();
 			Set /*IResource*/ classFiles = getClassFiles(file);
 			
-			ToggleBreakpointsAdapter.resetJavaBreakpoints(file);
+			BreakpointUtils.resetJavaBreakpoints(file);
 				
 			for(Iterator t = classFiles.iterator(); t.hasNext(); ){
 				IFile classFile = (IFile) t.next();
