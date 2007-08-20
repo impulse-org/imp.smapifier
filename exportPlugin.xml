@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="com.ibm.watson.smapifier" default="build.update.jar" basedir=".">
-	<import file="../org.eclipse.safari.runtime.feature/buildCommon.xml"/>
-	<import file="../org.eclipse.safari.update/buildPluginCommon.xml"/>
+	<import file="../org.eclipse.imp.runtime.feature/buildCommon.xml"/>
+	<import file="../org.eclipse.imp.update/buildPluginCommon.xml"/>
 
 	<target name="init" depends="properties">
 		<property name="plugin.name" value="com.ibm.watson.smapifier"/>
@@ -36,7 +36,7 @@
 			<compilerarg line="${compilerArg}"/>
 			<classpath>
 				<pathelement path="../com.ibm.watson.smapi/bin"/>
-				<pathelement path="../org.eclipse.uide.runtime/bin"/>
+				<pathelement path="../org.eclipse.imp.runtime/bin"/>
 				<pathelement path="${eclipse.build.path}"/>
 			</classpath>
 			<src path="src/"/>
