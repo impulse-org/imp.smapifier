@@ -56,7 +56,7 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
                 // This comes from the .project file, and looks like this:
                 //
                 //   <buildCommand>
-                //     <name>com.ibm.watson.smapifier.SmapieBuilder</name>
+                //     <name>org.eclipse.imp.smapifier.SmapieBuilder</name>
                 //     <arguments>
                 //       <dictionary>
                 //         <key>exten</key>
