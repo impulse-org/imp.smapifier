@@ -9,7 +9,7 @@ import org.osgi.framework.BundleContext;
  * The main plugin class to be used in the desktop.
  */
 public class SmapiePlugin extends PluginBase  {
-	public static final String kPluginID= "com.ibm.watson.smapifier";
+	public static final String kPluginID= "org.eclipse.imp.smapifier";
 
 	//The shared instance.
 	private static SmapiePlugin plugin;

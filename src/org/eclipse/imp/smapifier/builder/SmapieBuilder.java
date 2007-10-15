@@ -24,7 +24,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
-import com.ibm.watson.smapi.Main;
+import org.eclipse.imp.smapi.Main;
 import org.eclipse.imp.smapifier.SmapiePlugin;
 
 public class SmapieBuilder extends IncrementalProjectBuilder {

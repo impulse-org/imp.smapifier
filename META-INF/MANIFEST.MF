@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.jdt.core,
- com.ibm.watson.smapi,
+ org.eclipse.imp.smapi,
  org.eclipse.imp.runtime
 Eclipse-LazyStart: true
 Export-Package: org.eclipse.imp.smapifier.actions,
