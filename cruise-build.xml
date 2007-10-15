@@ -1,4 +1,4 @@
-<project name="com.ibm.watson.smapifier" default="all">
+<project name="org.eclipse.imp.smapifier" default="all">
     <target name="all" depends="compile, test, publish"/>
 
     <target name="compile">

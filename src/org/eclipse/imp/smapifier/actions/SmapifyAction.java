@@ -1,4 +1,4 @@
-package com.ibm.watson.smapifier.actions;
+package org.eclipse.imp.smapifier.actions;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IJavaProject;
@@ -8,7 +8,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionDelegate;
 
-import com.ibm.watson.smapifier.builder.SmapiProjectNature;
+import org.eclipse.imp.smapifier.builder.SmapiProjectNature;
 
 /**
  * Action to enable the SMAP builder on the currently-selected project.<br>

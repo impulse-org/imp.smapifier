@@ -6,7 +6,7 @@
          name="SMAP Builder"
          point="org.eclipse.core.resources.builders">
       <builder>
-         <run class="com.ibm.watson.smapifier.builder.SmapieBuilder"/>
+         <run class="org.eclipse.imp.smapifier.builder.SmapieBuilder"/>
       </builder>
    </extension>
    
@@ -15,14 +15,14 @@
          name="SMAP Nature"
          point="org.eclipse.core.resources.natures">
       <runtime>
-         <run class="com.ibm.watson.smapifier.builder.SmapiProjectNature"/>
+         <run class="org.eclipse.imp.smapifier.builder.SmapiProjectNature"/>
       </runtime>
-      <builder id="com.ibm.watson.smapifier.builder.SmapieBuilder"/>
+      <builder id="org.eclipse.imp.smapifier.builder.SmapieBuilder"/>
       <requires-nature id="org.eclipse.jdt.core.javanature"/>
    </extension>
    
    <extension
-         id="com.ibm.watson.smapifier.extension"
+         id="org.eclipse.imp.smapifier.extension"
          point="org.eclipse.ui.popupMenus">
       <objectContribution
             objectClass="org.eclipse.jdt.core.IJavaProject"
@@ -30,10 +30,10 @@
             id="com.ibm.smapie.menu">
          <action
                label="Enable SMAP Builder for X10"
-               class="com.ibm.watson.smapifier.actions.SmapifyAction"
+               class="org.eclipse.imp.smapifier.actions.SmapifyAction"
                enablesFor="1"
                menubarPath="additions"
-               id="com.ibm.watson.smapifier.actions">
+               id="org.eclipse.imp.smapifier.actions">
          </action>
       </objectContribution>
    </extension>

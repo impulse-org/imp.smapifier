@@ -1,4 +1,4 @@
-package com.ibm.watson.smapifier;
+package org.eclipse.imp.smapifier;
 
 import org.eclipse.imp.runtime.PluginBase;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -21,7 +21,6 @@ public class SmapiePlugin extends PluginBase  {
 		plugin = this;
 	}
 
-	
 	/**
 	 * This method is called upon plug-in activation
 	 */
@@ -59,9 +58,4 @@ public class SmapiePlugin extends PluginBase  {
 	public String getID() {
 		return kPluginID;
 	}
-
-
-	
-
-	
 }

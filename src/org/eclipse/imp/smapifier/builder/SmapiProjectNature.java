@@ -1,4 +1,4 @@
-package com.ibm.watson.smapifier.builder;
+package org.eclipse.imp.smapifier.builder;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,12 +9,12 @@ import java.util.Set;
 import org.eclipse.imp.builder.ProjectNatureBase;
 import org.eclipse.imp.runtime.IPluginLog;
 
-import com.ibm.watson.smapifier.SmapiePlugin;
+import org.eclipse.imp.smapifier.SmapiePlugin;
 
 public class SmapiProjectNature extends ProjectNatureBase {
 	public static final String k_natureID= SmapiePlugin.kPluginID + ".smapinature";
 
-	private Set/*<String>*/ fExtensions= new HashSet();
+	private Set<String> fExtensions= new HashSet<String>();
 
 	public SmapiProjectNature() { }
 
@@ -22,7 +22,7 @@ public class SmapiProjectNature extends ProjectNatureBase {
 	    fExtensions.add(exten);
 	}
 
-	public SmapiProjectNature(List/*<String>*/ extens) {
+	public SmapiProjectNature(List<String> extens) {
 	    fExtensions.addAll(extens);
 	}
 
@@ -50,7 +50,7 @@ public class SmapiProjectNature extends ProjectNatureBase {
 	}
 
 	protected Map getBuilderArguments() {
-	    Map m= new HashMap();
+	    Map<String,String> m= new HashMap<String, String>();
 
 	    if (fExtensions.size() > 0)
 		m.put("exten", fExtensions.iterator().next());

@@ -1,4 +1,4 @@
-package com.ibm.watson.smapifier.builder;
+package org.eclipse.imp.smapifier.builder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,7 +25,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
 import com.ibm.watson.smapi.Main;
-import com.ibm.watson.smapifier.SmapiePlugin;
+import org.eclipse.imp.smapifier.SmapiePlugin;
 
 public class SmapieBuilder extends IncrementalProjectBuilder {
 	public static final String BUILDER_ID= SmapiePlugin.kPluginID + ".SmapieBuilder";
@@ -139,7 +139,7 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 	private Set /*IFile*/ getClassFiles(IFile file){
 		IJavaProject javaProject = JavaCore.create(fProject);
 		IPath parentPath = file.getParent().getFullPath();
-		Set /*IFile*/ ret = new HashSet();
+		Set<IResource> ret = new HashSet<IResource>();
 		try {
 			IClasspathEntry[] entries = javaProject.getResolvedClasspath(true);
 			for (int i = 0; i < entries.length ; i++){
@@ -269,8 +269,8 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 	    }
 	}
 	
-	private List/*<IPath>*/ getProjectSrcPath() throws JavaModelException {
-		List/* <IPath> */srcPath= new ArrayList();
+	private List<IPath> getProjectSrcPath() throws JavaModelException {
+		List<IPath> srcPath= new ArrayList<IPath>();
 		IJavaProject javaProject= JavaCore.create(fProject);
 		IClasspathEntry[] classPath= javaProject.getResolvedClasspath(true);
 
