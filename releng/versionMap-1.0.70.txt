@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<version pluginID="org.eclipse.imp.smapifier"
+         versionID="1.0.70">
+    <file path="/org.eclipse.imp.smapifier/src/org/eclipse/imp/smapifier/actions/SmapifyAction.java"
+          version="1.3"/>
+    <file path="/org.eclipse.imp.smapifier/plugin.xml"
+          version="1.5"/>
+    <file path="/org.eclipse.imp.smapifier/src/org/eclipse/imp/smapifier/builder/SmapieBuilder.java"
+          version="1.17"/>
+    <file path="/org.eclipse.imp.smapifier/src/org/eclipse/imp/smapifier/builder/SmapiProjectNature.java"
+          version="1.10"/>
+    <file path="/org.eclipse.imp.smapifier/src/org/eclipse/imp/smapifier/SmapiePlugin.java"
+          version="1.7"/>
+</version>
