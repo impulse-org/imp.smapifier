@@ -2,7 +2,7 @@
 <version pluginID="org.eclipse.imp.smapifier"
          versionID="1.0.72">
     <file path="/org.eclipse.imp.smapifier/META-INF/MANIFEST.MF"
-          version="1.57"/>
+          version="1.58"/>
     <file path="/org.eclipse.imp.smapifier/plugin.xml"
           version="1.5"/>
     <file path="/org.eclipse.imp.smapifier/src/org/eclipse/imp/smapifier/SmapiePlugin.java"
