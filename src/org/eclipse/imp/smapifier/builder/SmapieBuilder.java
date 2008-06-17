@@ -90,11 +90,15 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 		if (delta != null) {
 		    SmapiePlugin.getDefault().maybeWriteInfoMsg("==> Smapi Scanning resource delta for project '" + fProject.getName() + "'... <==");
 		    delta.accept(fDeltaVisitor);
-		    SmapiePlugin.getDefault().maybeWriteInfoMsg("Smapi delta scan completed for project '" + fProject.getName() + "'...");
+		    if (SmapiePlugin.getDefault() != null) { // SMAPIE plugin already shut down?
+		        SmapiePlugin.getDefault().maybeWriteInfoMsg("Smapi delta scan completed for project '" + fProject.getName() + "'...");
+		    }
 		} else {
 		    SmapiePlugin.getDefault().maybeWriteInfoMsg("==> Smapi Scanning for '." + fFileExten + "' source files in project '" + fProject.getName() + "'... <==");
 		    fProject.accept(fResourceVisitor);
-		    SmapiePlugin.getDefault().maybeWriteInfoMsg("Smapi source file scan completed for project '" + fProject.getName() + "'...");
+                    if (SmapiePlugin.getDefault() != null) { // SMAPIE plugin already shut down?
+                        SmapiePlugin.getDefault().maybeWriteInfoMsg("Smapi source file scan completed for project '" + fProject.getName() + "'...");
+                    }
 		}
 		
 		IProject[] ret = new IProject[] { fProject };
