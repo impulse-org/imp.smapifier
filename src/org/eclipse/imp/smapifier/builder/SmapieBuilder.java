@@ -147,10 +147,12 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 	}
 	
 	private boolean isSourceFile(IFile file) {
-		return file.getRawLocation().toString().endsWith(fFileExten);
+	    // RMF 7/7/2008 - Don't just look at the end of the path, since the path may have
+	    // no file extension; only look at the file extension, if there is one.
+	    // (X10DT Bug #500)
+		String fileExten= file.getFileExtension();
+        return (fileExten != null) && fileExten.equals(fFileExten);
 	}
-	
-	
 
 	private Set /*IFile*/ getClassFiles(IFile file){
 		IJavaProject javaProject = JavaCore.create(fProject);
