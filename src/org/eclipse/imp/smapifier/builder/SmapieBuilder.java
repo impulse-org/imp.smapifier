@@ -112,6 +112,9 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 	
 	private final class DeltaVisitor implements IResourceDeltaVisitor {
 		public boolean visit(IResourceDelta delta) throws CoreException {
+		    if (delta.getKind() == IResourceDelta.REMOVED) {
+		        return false;
+		    }
 		    return processResource(delta.getResource());
 		}
 	}
