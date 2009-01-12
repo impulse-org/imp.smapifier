@@ -33,7 +33,16 @@ public class SmapiePlugin extends PluginBase  {
 		plugin = this;
 	}
 
-	/**
+    public String getID() {
+        return kPluginID;
+    }
+
+    @Override
+    public String getLanguageID() {
+        throw new UnsupportedOperationException("Someone called SmapiePlugin.getLanguageID()");
+    }
+
+    /**
 	 * This method is called upon plug-in activation
 	 */
 	public void start(BundleContext context) throws Exception {
@@ -64,10 +73,5 @@ public class SmapiePlugin extends PluginBase  {
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return AbstractUIPlugin.imageDescriptorFromPlugin("com.ibm.smapie", path);
-	}
-
-
-	public String getID() {
-		return kPluginID;
 	}
 }
