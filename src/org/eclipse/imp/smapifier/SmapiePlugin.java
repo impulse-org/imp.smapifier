@@ -60,7 +60,7 @@ public class SmapiePlugin extends PluginBase  {
 	/**
 	 * Returns the shared instance.
 	 */
-	public static SmapiePlugin getDefault() {
+	public static SmapiePlugin getInstance() {
 		return plugin;
 	}
 

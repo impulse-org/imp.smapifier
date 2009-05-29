@@ -7,7 +7,6 @@
 *
 * Contributors:
 *    Robert Fuhrer (rfuhrer@watson.ibm.com) - initial API and implementation
-
 *******************************************************************************/
 
 package org.eclipse.imp.smapifier.builder;
@@ -51,7 +50,7 @@ public class SmapiProjectNature extends ProjectNatureBase {
 	}
 
 	public IPluginLog getLog() {
-		return SmapiePlugin.getDefault();
+		return SmapiePlugin.getInstance();
 	}
 
 	protected void refreshPrefs() {
@@ -61,7 +60,7 @@ public class SmapiProjectNature extends ProjectNatureBase {
 		return "org.eclipse.jdt.core.javabuilder";
 	}
 
-	protected Map getBuilderArguments() {
+	protected @SuppressWarnings("unchecked") Map getBuilderArguments() {
 	    Map<String,String> m= new HashMap<String, String>();
 
 	    if (fExtensions.size() > 0)
