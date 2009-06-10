@@ -28,12 +28,12 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.imp.utils.BreakpointUtils;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
+import org.eclipse.imp.java.hosted.debug.BreakpointUtils;
 import org.eclipse.imp.smapi.Main;
 import org.eclipse.imp.smapifier.SmapiePlugin;
 
@@ -225,18 +225,16 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
             // Caching would be a really good idea here: save the set of project
             // output folders in a Set. Seems Path implements equals() properly.
             IPath projPath= fProject.getFullPath();
-            final IJavaProject javaProj= JavaCore.create(fProject);
-            boolean projectIsSrcBin= javaProj.getOutputLocation().matchingFirstSegments(projPath) == projPath.segmentCount();
+            boolean projectIsSrcBin= fJavaProject.getOutputLocation().matchingFirstSegments(projPath) == projPath.segmentCount();
 
             if (projectIsSrcBin)
                 return false;
 
             final IPath resourcePath= resource.getFullPath();
 
-            if (resourcePath.equals(javaProj.getOutputLocation()))
-                return true;
+            if (resourcePath.equals(fJavaProject.getOutputLocation())) return true;
 
-            IClasspathEntry[] cp= javaProj.getResolvedClasspath(true);
+            IClasspathEntry[] cp= fJavaProject.getResolvedClasspath(true);
 
             for(int i= 0; i < cp.length; i++) {
                 if (cp[i].getEntryKind() == IClasspathEntry.CPE_SOURCE) {
@@ -265,8 +263,7 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 
     private List<IPath> getProjectSrcPath() throws JavaModelException {
         List<IPath> srcPath= new ArrayList<IPath>();
-        IJavaProject javaProject= JavaCore.create(fProject);
-        IClasspathEntry[] classPath= javaProject.getResolvedClasspath(true);
+        IClasspathEntry[] classPath= fJavaProject.getResolvedClasspath(true);
 
         for(int i= 0; i < classPath.length; i++) {
             IClasspathEntry e= classPath[i];
