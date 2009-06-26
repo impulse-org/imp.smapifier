@@ -17,7 +17,7 @@
       <runtime>
          <run class="org.eclipse.imp.smapifier.builder.SmapiProjectNature"/>
       </runtime>
-      <builder id="org.eclipse.imp.smapifier.builder.SmapieBuilder"/>
+      <builder id="org.eclipse.imp.smapifier.SmapieBuilder"/>
       <requires-nature id="org.eclipse.jdt.core.javanature"/>
    </extension>
    
