@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SMAP Builder (Incubation)
 Bundle-SymbolicName: org.eclipse.imp.smapifier;singleton:=true
-Bundle-Version: 0.1.89.1
+Bundle-Version: 0.1.89.2
 Bundle-Activator: org.eclipse.imp.smapifier.SmapiePlugin
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
@@ -15,5 +15,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui
 Export-Package: org.eclipse.imp.smapifier.actions,
  org.eclipse.imp.smapifier.builder
-Bundle-Vendor: mvaziri@us.ibm.com
+Bundle-Vendor: rfuhrer@watson.ibm.com
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
