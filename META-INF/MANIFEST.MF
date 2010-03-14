@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: SMAP Builder (Incubation)
 Bundle-SymbolicName: org.eclipse.imp.smapifier;singleton:=true
-Bundle-Version: 0.1.89.qualifier
+Bundle-Version: 0.1.90.qualifier
 Bundle-Activator: org.eclipse.imp.smapifier.SmapiePlugin
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
