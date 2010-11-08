@@ -22,15 +22,39 @@ import org.eclipse.imp.runtime.IPluginLog;
 
 import org.eclipse.imp.smapifier.SmapiePlugin;
 
+/**
+ * A nature implementation that supports rewriting generated Java .class files
+ * with SMAP line-mapping attributes. Its only purpose is to enable the corresponding
+ * builder that does the class-file rewriting.
+ */
 public class SmapiProjectNature extends ProjectNatureBase {
 	public static final String k_natureID= SmapiePlugin.kPluginID + ".smapinature";
 
+	/**
+	 * The set of source file-name extensions for the original source from which the
+	 * Java source files are generated
+	 */
 	private Set<String> fExtensions= new HashSet<String>();
 
+	/**
+	 * The ID of the "upstream" builder, i.e., the builder that produces the
+	 * class files that will get rewritten/augmented by this builder
+	 */
+	private String fUpstreamBuilderID;
+	
 	public SmapiProjectNature() { }
 
+	/**
+	 * This constructor flavor assumes the JDT builder is the "upstream" builder,
+	 * i.e., the builder that generates the .class files to be rewritten.
+	 */
 	public SmapiProjectNature(String exten) {
-	    fExtensions.add(exten);
+	    this(exten, "org.eclipse.jdt.core.javabuilder");
+	}
+
+	public SmapiProjectNature(String exten, String upstreamBuilderID) {
+		fExtensions.add(exten);
+		fUpstreamBuilderID = upstreamBuilderID;
 	}
 
 	public SmapiProjectNature(List<String> extens) {
@@ -53,11 +77,14 @@ public class SmapiProjectNature extends ProjectNatureBase {
 		return SmapiePlugin.getInstance();
 	}
 
-	protected void refreshPrefs() {
-	}
+	protected void refreshPrefs() { }
 
+	/**
+	 * @return the ID of the "upstream" builder, i.e., the builder that produces the
+     * class files that will get rewritten/augmented by this builder
+	 */
 	protected String getUpstreamBuilderID() {
-		return "org.eclipse.jdt.core.javabuilder";
+		return fUpstreamBuilderID;
 	}
 
 	protected @SuppressWarnings("unchecked") Map getBuilderArguments() {
