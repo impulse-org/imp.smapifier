@@ -3,14 +3,15 @@ Bundle-ManifestVersion: 2
 Bundle-Name: SMAP Builder (Incubation)
 Bundle-SymbolicName: org.eclipse.imp.smapifier;singleton:=true
 Bundle-Version: 0.2.1.qualifier
-Bundle-Activator: org.eclipse.imp.smapifier.SmapiePlugin
+Bundle-Activator: org.eclipse.imp.smapifier.SMAPifierPlugin
 Bundle-ActivationPolicy: lazy
 Eclipse-LazyStart: true
-Require-Bundle: org.eclipse.core.runtime,
+Require-Bundle: org.eclipse.core.filesystem;bundle-version="1.3.1",
+ org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.eclipse.imp.java.hosted,
- org.eclipse.imp.smapi,
  org.eclipse.imp.runtime,
+ org.eclipse.imp.smapi,
  org.eclipse.jdt.core,
  org.eclipse.ui
 Export-Package: org.eclipse.imp.smapifier.actions,
