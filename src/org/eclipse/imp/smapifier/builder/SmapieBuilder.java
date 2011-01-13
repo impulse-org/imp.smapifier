@@ -11,12 +11,15 @@
 
 package org.eclipse.imp.smapifier.builder;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -24,21 +27,21 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.imp.smapi.Main;
+import org.eclipse.imp.smapifier.SMAPifierPlugin;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
-import org.eclipse.imp.java.hosted.debug.BreakpointUtils;
-import org.eclipse.imp.smapi.Main;
-import org.eclipse.imp.smapifier.SmapiePlugin;
-
 public class SmapieBuilder extends IncrementalProjectBuilder {
-    public static final String BUILDER_ID= SmapiePlugin.kPluginID + ".SmapieBuilder";
+    public static final String BUILDER_ID= SMAPifierPlugin.kPluginID + ".SmapieBuilder";
 
     private IProject fProject;
 
@@ -53,13 +56,13 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 
     // RMF 8/4/2006 - This can't be static; different projects in the same workspace
     // could be configured to run the SMAP builder for different file-name extensions.
-    private String fFileExten= "x10";
+    private String fFileExten= "";
 
     public String getOrigExten() {
         return fFileExten;
     }
 
-    protected IProject[] build(int kind, @SuppressWarnings("unchecked") Map args, IProgressMonitor monitor) throws CoreException {
+    protected IProject[] build(int kind, @SuppressWarnings("rawtypes") Map args, IProgressMonitor monitor) throws CoreException {
         fProject= getProject();
         fJavaProject= JavaCore.create(fProject);
         fMonitor= monitor;
@@ -86,16 +89,16 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
         IResourceDelta delta= getDelta(fProject);
 
         if (delta != null) {
-//          SmapiePlugin.getDefault().maybeWriteInfoMsg("==> SMAPI Scanning resource delta for project '" + fProject.getName() + "'... <==");
+//          SMAPifierPlugin.getDefault().maybeWriteInfoMsg("==> SMAPI Scanning resource delta for project '" + fProject.getName() + "'... <==");
             delta.accept(fDeltaVisitor);
-//          if (SmapiePlugin.getDefault() != null) { // SMAPIE plugin already shut down?
-//              SmapiePlugin.getDefault().maybeWriteInfoMsg("SMAPI delta scan completed for project '" + fProject.getName() + "'...");
+//          if (SMAPifierPlugin.getDefault() != null) { // SMAPIE plugin already shut down?
+//              SMAPifierPlugin.getDefault().maybeWriteInfoMsg("SMAPI delta scan completed for project '" + fProject.getName() + "'...");
 //          }
         } else {
-//          SmapiePlugin.getDefault().maybeWriteInfoMsg("==> SMAPI Scanning for '." + fFileExten + "' source files in project '" + fProject.getName() + "'... <==");
+//          SMAPifierPlugin.getDefault().maybeWriteInfoMsg("==> SMAPI Scanning for '." + fFileExten + "' source files in project '" + fProject.getName() + "'... <==");
             fProject.accept(fResourceVisitor);
-//          if (SmapiePlugin.getDefault() != null) { // SMAPIE plugin already shut down?
-//              SmapiePlugin.getDefault().maybeWriteInfoMsg("SMAPI source file scan completed for project '" + fProject.getName() + "'...");
+//          if (SMAPifierPlugin.getDefault() != null) { // SMAPIE plugin already shut down?
+//              SMAPifierPlugin.getDefault().maybeWriteInfoMsg("SMAPI source file scan completed for project '" + fProject.getName() + "'...");
 //          }
         }
 
@@ -122,18 +125,17 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 
     protected boolean processResource(IResource resource) {
         if (resource instanceof IFile) {
-            IFile maybeSrcFile= (IFile) resource;
+            IFile srcFile= (IFile) resource;
 
-            if (!isSourceFile(maybeSrcFile))
+            if (!isSourceFile(srcFile))
                 return false;
 
-            String srcFileLoc= maybeSrcFile.getRawLocation().toString();
-            Set<IFile> classFiles= getClassFiles(maybeSrcFile);
+            String srcFileLoc= srcFile.getRawLocation().toString();
+            Set<IFile> classFiles= getClassFiles(srcFile);
 
-            BreakpointUtils.resetJavaBreakpoints(maybeSrcFile);
 
             for(IFile classFile: classFiles) {
-                Main.smapify(srcFileLoc, fPathPrefix, classFile.getRawLocation().toString());
+                Main.smapify(srcFileLoc, fPathPrefix, getMainGeneratedFile(srcFile), classFile.getRawLocation().toString());
             }
         }
         return true;
@@ -187,13 +189,68 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
                 }
             }
         } catch (JavaModelException e) {
-            SmapiePlugin.getInstance().logException(e.getMessage(), e);
+            SMAPifierPlugin.getInstance().logException(e.getMessage(), e);
         } catch (CoreException e) {
-            SmapiePlugin.getInstance().logException(e.getMessage(), e);
+            SMAPifierPlugin.getInstance().logException(e.getMessage(), e);
         }
         return ret;
     }
 
+    /**
+     * @param origSrcFile the workspace-relative path to a source file in the top-level
+     * language (from which Java source is generated)
+     * @return the OS-specific-format filesystem-absolute path to the "main" corresponding .java file
+     */
+    private String getMainGeneratedFile(final IFile origSrcFile)  {
+        IWorkspaceRoot wsRoot = fProject.getWorkspace().getRoot();
+        final IPath wsRelativeFilePath = origSrcFile.getFullPath();
+
+        // First, try the same folder as the original src file -- the .java file might live there
+        final IPath javaSrcPath = wsRelativeFilePath.removeFileExtension().addFileExtension("java");
+        final IFileStore fileStore = EFS.getLocalFileSystem().getStore(wsRoot.getFile(javaSrcPath).getLocationURI());
+
+        if (fileStore.fetchInfo().exists()) {
+            return javaSrcPath.toOSString();
+        }
+
+        final IPath wsLocation = wsRoot.getRawLocation();
+        final IPath projRelJavaFilePath = wsRelativeFilePath.removeFirstSegments(1).removeFileExtension().addFileExtension("java").makeAbsolute();
+
+    	try {
+    		for (final IClasspathEntry cpEntry : fJavaProject.getRawClasspath()) {
+    			if (cpEntry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+    			    // Skip if this source entry isn't the entry containing 'origSrcFile'.
+                    final IPath srcPath = cpEntry.getPath();
+
+                    if (!srcPath.isPrefixOf(wsRelativeFilePath)) {
+                        continue;
+                    }
+
+    				// Now look in the output locations - the one for this classpath entry, if any,
+    				// or, failing that, the project's output location.
+    			    final IPath outputLocation;
+
+                    if (cpEntry.getOutputLocation() == null) {
+                        outputLocation = fJavaProject.getOutputLocation();
+                    } else {
+                        outputLocation = cpEntry.getOutputLocation();
+                    }
+
+    				final int srcPathCount = srcPath.removeFirstSegments(1).segmentCount(); // discounting the project name
+                    final IPath generatedFilePath = wsLocation.append(outputLocation.append(projRelJavaFilePath.removeFirstSegments(srcPathCount)));
+    				final String generatedFilePathStr = generatedFilePath.toOSString();
+
+    				if (new File(generatedFilePathStr).exists()) {
+    				    return generatedFilePath.toOSString();
+    				}
+    			}
+    		}
+    	} catch (CoreException e) {
+    		SMAPifierPlugin.getInstance().logException(e.getMessage(), e);
+    	}
+        return null;
+    }
+    
     /**
      * @return true if <code>otherFileName</code> names a class file that was generated
      * from the source file <code>srcFile</code>
@@ -243,7 +300,7 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
                 }
             }
         } catch (JavaModelException e) {
-            SmapiePlugin.getInstance().logException(e.getMessage(), e);
+            SMAPifierPlugin.getInstance().logException(e.getMessage(), e);
         }
         return false;
     }
