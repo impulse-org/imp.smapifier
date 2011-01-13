@@ -20,7 +20,7 @@ import java.util.Set;
 import org.eclipse.imp.builder.ProjectNatureBase;
 import org.eclipse.imp.runtime.IPluginLog;
 
-import org.eclipse.imp.smapifier.SmapiePlugin;
+import org.eclipse.imp.smapifier.SMAPifierPlugin;
 
 /**
  * A nature implementation that supports rewriting generated Java .class files
@@ -28,7 +28,7 @@ import org.eclipse.imp.smapifier.SmapiePlugin;
  * builder that does the class-file rewriting.
  */
 public class SmapiProjectNature extends ProjectNatureBase {
-	public static final String k_natureID= SmapiePlugin.kPluginID + ".smapinature";
+	public static final String k_natureID= SMAPifierPlugin.kPluginID + ".smapinature";
 
 	/**
 	 * The set of source file-name extensions for the original source from which the
@@ -74,7 +74,7 @@ public class SmapiProjectNature extends ProjectNatureBase {
 	}
 
 	public IPluginLog getLog() {
-		return SmapiePlugin.getInstance();
+		return SMAPifierPlugin.getInstance();
 	}
 
 	protected void refreshPrefs() { }
