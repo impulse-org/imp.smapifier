@@ -7,7 +7,6 @@
 *
 * Contributors:
 *    Robert Fuhrer (rfuhrer@watson.ibm.com) - initial API and implementation
-
 *******************************************************************************/
 
 package org.eclipse.imp.smapifier;
@@ -20,16 +19,13 @@ import org.osgi.framework.BundleContext;
 /**
  * The main plugin class to be used in the desktop.
  */
-public class SmapiePlugin extends PluginBase  {
+public class SMAPifierPlugin extends PluginBase  {
 	public static final String kPluginID= "org.eclipse.imp.smapifier";
 
 	//The shared instance.
-	private static SmapiePlugin plugin;
+	private static SMAPifierPlugin plugin;
 	
-	/**
-	 * The constructor.
-	 */
-	public SmapiePlugin() {
+	public SMAPifierPlugin() {
 		plugin = this;
 	}
 
@@ -39,7 +35,7 @@ public class SmapiePlugin extends PluginBase  {
 
     @Override
     public String getLanguageID() {
-        throw new UnsupportedOperationException("Someone called SmapiePlugin.getLanguageID()");
+        throw new UnsupportedOperationException("Someone called SMAPifierPlugin.getLanguageID()");
     }
 
     /**
@@ -60,7 +56,7 @@ public class SmapiePlugin extends PluginBase  {
 	/**
 	 * Returns the shared instance.
 	 */
-	public static SmapiePlugin getInstance() {
+	public static SMAPifierPlugin getInstance() {
 		return plugin;
 	}
 
@@ -72,6 +68,6 @@ public class SmapiePlugin extends PluginBase  {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("com.ibm.smapie", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin(kPluginID, path);
 	}
 }
