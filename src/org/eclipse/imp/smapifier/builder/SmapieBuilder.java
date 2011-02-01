@@ -32,7 +32,6 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.imp.smapi.Main;
 import org.eclipse.imp.smapifier.SMAPifierPlugin;
 import org.eclipse.jdt.core.IClasspathEntry;
