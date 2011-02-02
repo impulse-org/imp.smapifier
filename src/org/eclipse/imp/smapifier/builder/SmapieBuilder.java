@@ -32,6 +32,7 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.imp.java.hosted.BuildPathUtils;
 import org.eclipse.imp.smapi.Main;
 import org.eclipse.imp.smapifier.SMAPifierPlugin;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -158,7 +159,8 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
         try {
             IClasspathEntry[] entries= fJavaProject.getResolvedClasspath(true);
             for(int i= 0; i < entries.length; i++) {
-                if (entries[i].getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+            	if (entries[i].getEntryKind() == IClasspathEntry.CPE_SOURCE && entries[i].getPath().isPrefixOf(srcFile.getFullPath())
+              		  && !BuildPathUtils.isExcluded(srcFile.getFullPath(), entries[i])){
                     if (srcFile.getFullPath().matchingFirstSegments(entries[i].getPath()) == entries[i].getPath().segmentCount()) {
                         IPath out= entries[i].getOutputLocation();
 
@@ -217,7 +219,8 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 
     	try {
     		for (final IClasspathEntry cpEntry : fJavaProject.getRawClasspath()) {
-    			if (cpEntry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+    			if (cpEntry.getEntryKind() == IClasspathEntry.CPE_SOURCE && cpEntry.getPath().isPrefixOf(origSrcFile.getFullPath())
+                		  && !BuildPathUtils.isExcluded(origSrcFile.getFullPath(), cpEntry)){
     			    // Skip if this source entry isn't the entry containing 'origSrcFile'.
                     final IPath srcPath = cpEntry.getPath();
 
