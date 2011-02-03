@@ -160,32 +160,30 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
             IClasspathEntry[] entries= fJavaProject.getResolvedClasspath(true);
             for(int i= 0; i < entries.length; i++) {
             	if (entries[i].getEntryKind() == IClasspathEntry.CPE_SOURCE && entries[i].getPath().isPrefixOf(srcFile.getFullPath())
-              		  && !BuildPathUtils.isExcluded(srcFile.getFullPath(), entries[i])){
-                    if (srcFile.getFullPath().matchingFirstSegments(entries[i].getPath()) == entries[i].getPath().segmentCount()) {
-                        IPath out= entries[i].getOutputLocation();
+              		  && !BuildPathUtils.isExcluded(srcFile.getFullPath(), entries[i])) {
+            	    IPath out= entries[i].getOutputLocation();
 
-                        if (out == null) // using default output folder
-                            out= fJavaProject.getOutputLocation().removeFirstSegments(1);
+            	    if (out == null) // using default output folder
+            	        out= fJavaProject.getOutputLocation().removeFirstSegments(1);
 
-                        IPath parentSrcPath= parentPath.removeFirstSegments(entries[i].getPath().segmentCount());
-                        IPath parentFullPath= out.append(parentSrcPath);
-                        final IResource parent= fProject.findMember(parentFullPath);
+            	    IPath parentSrcPath= parentPath.removeFirstSegments(entries[i].getPath().segmentCount());
+            	    IPath parentFullPath= out.append(parentSrcPath);
+            	    final IResource parent= fProject.findMember(parentFullPath);
 
-                        // RMF 8/4/2006 - If the SMAP builder ran before the Java builder
-                        // (e.g. due to a misconfigured project), the output folder might
-                        // have been cleaned out, and sub-folders (corresponding to packages)
-                        // won't exist, so parent could be null.
-                        if (parent == null)
-                            continue;
+            	    // RMF 8/4/2006 - If the SMAP builder ran before the Java builder
+            	    // (e.g. due to a misconfigured project), the output folder might
+            	    // have been cleaned out, and sub-folders (corresponding to packages)
+            	    // won't exist, so parent could be null.
+            	    if (parent == null)
+            	        continue;
 
-                        IResource[] members= ((IContainer) parent).members();
+            	    IResource[] members= ((IContainer) parent).members();
 
-                        for(int j= 0; j < members.length; j++) {
-                            String name= members[j].getName();
-                            if (members[j] instanceof IFile && classBelongsTo(srcFile, name)) {
-                                ret.add((IFile) members[j]);
-                            }
-                        }
+            	    for(int j= 0; j < members.length; j++) {
+            	        String name= members[j].getName();
+            	        if (members[j] instanceof IFile && classBelongsTo(srcFile, name)) {
+            	            ret.add((IFile) members[j]);
+            	        }
                     }
                 }
             }
