@@ -135,7 +135,10 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 
 
             for(IFile classFile: classFiles) {
-                Main.smapify(srcFileLoc, fPathPrefix, getMainGeneratedFile(srcFile), classFile.getRawLocation().toString());
+                String generatedFile= getMainGeneratedFile(srcFile);
+                if (generatedFile != null) {
+                    Main.smapify(srcFileLoc, fPathPrefix, generatedFile, classFile.getRawLocation().toString());
+                }
             }
         }
         return true;
@@ -151,7 +154,7 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
 
     /**
      * @return the set of <code>IFiles</code> representing all of the .class files that
-     * were generated from the given Java source file
+     * were generated from the given source file
      */
     private Set<IFile> getClassFiles(IFile srcFile) {
         IPath parentPath= srcFile.getParent().getFullPath();
