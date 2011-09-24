@@ -58,12 +58,17 @@ public class SmapieBuilder extends IncrementalProjectBuilder {
     // could be configured to run the SMAP builder for different file-name extensions.
     private String fFileExten= "";
 
+    private static IProject[] EMPTY_PROJECT_SET = { };
+
     public String getOrigExten() {
         return fFileExten;
     }
 
     protected IProject[] build(int kind, @SuppressWarnings("rawtypes") Map args, IProgressMonitor monitor) throws CoreException {
         fProject= getProject();
+        if (monitor.isCanceled()) {
+            return EMPTY_PROJECT_SET;
+        }
         fJavaProject= JavaCore.create(fProject);
         fMonitor= monitor;
         fPathPrefix= fProject.getWorkspace().getRoot().getRawLocation() + fProject.getFullPath().toString();
